@@ -2,7 +2,7 @@
 
 <img src="https://github.com/dani3l3/PadIno/blob/master/img/build-process-13.jpg?raw=true" alt="Pad-ino picture" width="250">
 
-2025 01 04 - v.01 - initial version (still needs some tweaking of thresholds for sensitivity and some code/comments cleanup)
+2025 01 04 - v.01 - initial version (still needs some tweaking of thresholds for sensitivity and some code/comments cleanup. Also I tried incorporating the USB-Rename library but it still doesn't work so it's commented out, TBD.)
 
 Works on Arduino Pro Micro / Leonardo - UNTESTED on any other board (but it should work on all those based on the Atmega32U4 chipset).
 

@@ -2,7 +2,7 @@
 
 'Pad-ino' MIDI 6 Drum Pads Controller by Plank guitars and musical things by Shambien (Daniele Muscetta) - https://www.shambien.com
 
-2025 01 04 - v.01 - initial version (still needs some tweaking of thresholds for sensitivity and some code/comments cleanup)
+2025 01 04 - v.01 - initial version (still needs some tweaking of thresholds for sensitivity and some code/comments cleanup. Also I tried incorporating the USB-Rename library but it still doesn't work so it's commented out, TBD.)
 
 Works on Arduino Pro Micro / Leonardo - UNTESTED on any other board (but it should work on all those based on the Atmega32U4 chipset).
 
@@ -48,7 +48,9 @@ Shambien
 // #define VELDEBUG     1   // Will print DEBUG information just for velocity info (if knock > threshold)
 // #define MIDIDEBUG     1   // Will print DEBUG information for MIDI messages to be sent
 
-#define THRESHOLD 20  // Value at which the drum triggers // TODO adjust
+// Value at which the drum triggers / get considered 'hit hard enough' 
+// TODO adjust based on Pad's sensitivy (which depends on the physical build and piezo's but mostly the enclosure, to filter out adjacent piezo's picking up knocks from other ones)
+#define THRESHOLD 30   
 
 // overridden functions (defined later below)
 static void MIDI_setup();
@@ -60,7 +62,7 @@ static void MIDI_noteOff(int ch, int note);
 // the MIDI_noteOn function takes care of channel-1 since in code it's zero based so this is the human-readable channel
 const int MIDI_CHANNEL = 10; 
 
-// 31250 for MIDI class compliant
+// 31250 for MIDI class compliant but not really important here iin this context as we use USBMIDI, not regular midi, and it is only used for the debugging information to serial
 const int BAUD_RATE = 31250;
 
 // Pads mapped to analog inputs
@@ -170,7 +172,7 @@ void loop() {
     #endif
 
     MIDI_noteOn(MIDI_CHANNEL, Note1, map(analog0.getRawValue(), potMin, potMax, 0, 127));
-    delay(20);
+    delay(5);
   };
 
 
@@ -209,7 +211,7 @@ void loop() {
     #endif
 
     MIDI_noteOn(MIDI_CHANNEL, Note2, map(analog1.getRawValue(), potMin, potMax, 0, 127));
-    delay(20);
+    delay(5);
   };
 
 
@@ -248,7 +250,7 @@ void loop() {
     #endif
 
     MIDI_noteOn(MIDI_CHANNEL, Note3, map(analog2.getRawValue(), potMin, potMax, 0, 127));
-    delay(20);
+    delay(5);
   };
 
 
@@ -287,7 +289,7 @@ void loop() {
     #endif
 
     MIDI_noteOn(MIDI_CHANNEL, Note4, map(analog3.getRawValue(), potMin, potMax, 0, 127));
-    delay(20);
+    delay(5);
   };
 
 
@@ -326,7 +328,7 @@ void loop() {
     #endif
 
     MIDI_noteOn(MIDI_CHANNEL, Note5, map(analog4.getRawValue(), potMin, potMax, 0, 127));
-    delay(20);
+    delay(5);
   };
 
 
@@ -365,7 +367,7 @@ void loop() {
     #endif
 
     MIDI_noteOn(MIDI_CHANNEL, Note6, map(analog5.getRawValue(), potMin, potMax, 0, 127));
-    delay(20);
+    delay(5);
   };
 
 
