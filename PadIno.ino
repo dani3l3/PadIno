@@ -25,10 +25,8 @@ I cannot thank all of the authors of the above enough for teaching me! May God b
 #include "Libraries\usb_rename.h"
 #include "Libraries\GM_Percussions.h"
 
-// TODO understand if it's better to use this library or not (it's meant for potentiometers, might not be the right choice for piezos...)
 #include <ResponsiveAnalogRead.h>
 
-// TODO check why the stuff from Silveira use different codepaths and libraries on different boards (Uno vs Pro Micro == ATMEGA328 vs ATMEGA32U4)
 #include <MIDIUSB.h>
 #include <MIDIUSB_Defs.h>
 #include <frequencyToNote.h>
@@ -53,15 +51,12 @@ static void MIDI_noteOn(int ch, int note, int velocity);
 static void MIDI_noteOff(int ch, int note);
 
 
-// TODO check if special treatment happens for channel 10 (channel 10 where drums are usually located) or not
-// the MIDI_noteOn function takes care of channel-1 since in code it's zero based
+// Channel 10 is where drums are usually located
+// the MIDI_noteOn function takes care of channel-1 since in code it's zero based so this is the human-readable channel
 const int MIDI_CHANNEL = 10; 
 
-
-// use if using with ATmega328 (uno, mega, nano...)
-// 31250 for MIDI class compliant | 115200 fastest
+// 31250 for MIDI class compliant
 const int BAUD_RATE = 31250;
-
 
 // Pads mapped to analog inputs
 const int Pad1 = A0;
@@ -87,7 +82,6 @@ const float snapMultiplier = 0.01; // (0.0 - 1.0) - Increase for faster, but les
 const int potMin = 10;
 const int potMax = 256; // might need tweaking based on how sensitive the hardware pads and piezo are (MAX: 1023)
 
-// TODO not sure if the ResponsiveAnalogRead library is useful or not for Piezo's... it was meant for potentiometers
 ResponsiveAnalogRead analog0(Pad1, true, snapMultiplier);
 ResponsiveAnalogRead analog1(Pad2, true, snapMultiplier);
 ResponsiveAnalogRead analog2(Pad3, true, snapMultiplier);
