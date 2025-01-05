@@ -1,4 +1,5 @@
-'Pad-ino' MIDI 6 Drum Pads Controller by Plank guitars and musical things by Shambien (Daniele Muscetta) - https://www.shambien.com
+# Pad-ino
+a MIDI 6 Drum Pads Controller by Plank guitars and musical things by Shambien (Daniele Muscetta) - https://www.shambien.com
 
 <img src="https://github.com/dani3l3/PadIno/blob/master/img/build-process-13.jpg?raw=true" alt="Pad-ino picture" width="250">
 
