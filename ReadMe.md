@@ -4,7 +4,7 @@ by Plank guitars and musical things by Shambien (Daniele Muscetta) - https://www
 
 <img src="https://github.com/dani3l3/PadIno/blob/master/img/build-process-13.jpg?raw=true" alt="Pad-ino picture" width="250">
 
-2025 01 04 - v.01 - initial version (still needs some tweaking of thresholds for sensitivity and some code/comments cleanup. Also I tried incorporating the USB-Rename library (to give it a custom name) but I didn't maage to make it work so far, so it's commented out, TBD.)
+2025 01 04 - v.01 - initial version: might still needs some tweaking of thresholds for sensitivity and some code/comments cleanup. Also I tried incorporating the USB-Rename library (to give it a custom name) but I didn't maage to make it work so far, so it's commented out, TBD.
 
 Works on Arduino Pro Micro / Leonardo - UNTESTED on any other board (but it should work on all those based on the Atmega32U4 chipset).
 
