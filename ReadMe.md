@@ -8,6 +8,12 @@ by Plank guitars and musical things by Shambien (Daniele Muscetta) - https://www
 
 Works on Arduino Pro Micro / Leonardo - UNTESTED on any other board (but it should work on all those based on the Atmega32U4 chipset).
 
+It can be built for under 10$ with the following electronic components:
+1. Arduino Pro Micro (or Leonardo)
+1. 6 ceramic piezo discs
+1. 6 1MegaOhm resistors
+1. 6 Zener diodes 5.1V
+
 Besides the code, in this repository you can find [several pictures I took during various phases of the build process](./img/).
 
 Contains portions of code, inspiration and teachings derived from various sources such as: 
