@@ -4,8 +4,8 @@ by Plank guitars and musical things by Shambien (Daniele Muscetta) - https://www
 
 <img src="https://github.com/dani3l3/PadIno/blob/master/img/build-process-13.jpg?raw=true" alt="Pad-ino picture" width="250">
 
-2025 01 04 - v1.0 - initial version.
-2025 01 06 - v1.1 - code/unused references cleanup, fixed USB-Rename
+- 2025 01 04 - v1.0 - initial version
+- 2025 01 06 - v1.1 - code/unused references cleanup, fixed USB-Rename
 
 Works on Arduino Pro Micro / Leonardo - UNTESTED on any other board (but it should work on all those based on the Atmega32U4 chipset).
 
