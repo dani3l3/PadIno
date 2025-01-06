@@ -3,27 +3,24 @@
 'Pad-ino' 
 a MIDI 6 Drum Pads Controller by Plank guitars and musical things by Shambien (Daniele Muscetta) - https://www.shambien.com
 
-2025 01 04 - v.01 - initial version.
+2025 01 04 - v1.0 - initial version.
+2025 01 06 - v1.1 - code/unused references cleanup, fixed USB-Rename
 
 For more information and credits refer to ReadMe in the GitHub repository https://github.com/dani3l3/PadIno
 
 
 */
 
-#include "Libraries\usb_rename.h"
+#include "Libraries\usb_rename.cpp"
 #include "Libraries\GM_Percussions.h"
 
 #include <ResponsiveAnalogRead.h>
 
 #include <MIDIUSB.h>
-#include <MIDIUSB_Defs.h>
-#include <frequencyToNote.h>
-#include <pitchToFrequency.h>
-#include <pitchToNote.h>
 
 
-// TODO - final name?
-// USBRename PadIno = USBRename("Pad-ino", "Plank", "1");
+// Rename the device
+USBRename PadIno = USBRename("Pad-ino", "Plank", "1.1");
 
 
 
@@ -45,7 +42,7 @@ static void MIDI_noteOff(int ch, int note);
 // the MIDI_noteOn function takes care of channel-1 since in code it's zero based so this is the human-readable channel
 const int MIDI_CHANNEL = 10; 
 
-// 31250 for MIDI class compliant but not really important here iin this context as we use USBMIDI, not regular midi, and it is only used for the debugging information to serial
+// 31250 for MIDI class compliant but not really important here in this context as we use USBMIDI, not regular midi, and it is actually only used for the debugging information to serial
 const int BAUD_RATE = 31250;
 
 // Pads mapped to analog inputs
@@ -70,7 +67,7 @@ const int Note6 = BASS_DRUM_1;
 // for ResponsiveAnalogRead resolution and mapping velocities
 const float snapMultiplier = 0.01; // (0.0 - 1.0) - Increase for faster, but less smooth reading
 const int potMin = 10;
-const int potMax = 256; // might need tweaking based on how sensitive the hardware pads and piezo are (MAX: 1023)
+const int potMax = 256; // TODO might need tweaking based on how sensitive the hardware pads and piezo are (MAX: 1023)
 
 ResponsiveAnalogRead analog0(Pad1, true, snapMultiplier);
 ResponsiveAnalogRead analog1(Pad2, true, snapMultiplier);
