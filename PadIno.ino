@@ -155,8 +155,8 @@ void loop() {
       // MIDI_noteOff(MIDI_CHANNEL, Note1); //it might be needed if you use this with a synth but typically not needed to trigger drum samples and it would slow down
       // delay(5); //can use it for debug but it will slow down responsiveness of the device
     
-      return; // to mininize triggering of adjacent pads
     }
+    return; // to mininize triggering of adjacent pads
   };
 
 
@@ -201,8 +201,8 @@ void loop() {
       // MIDI_noteOff(MIDI_CHANNEL, Note2); //it might be needed if you use this with a synth but typically not needed to trigger drum samples and it would slow down
       // delay(5); //can use it for debug but it will slow down responsiveness of the device
 
-      return; // to mininize triggering of adjacent pads
     }
+    return; // to mininize triggering of adjacent pads
   };
 
 
@@ -247,8 +247,8 @@ void loop() {
       // MIDI_noteOff(MIDI_CHANNEL, Note3); //it might be needed if you use this with a synth but typically not needed to trigger drum samples and it would slow down
       // delay(5); //can use it for debug but it will slow down responsiveness of the device
       
-      return; // to mininize triggering of adjacent pads
     }
+    return; // to mininize triggering of adjacent pads
   };
 
 
@@ -293,8 +293,8 @@ void loop() {
       // MIDI_noteOff(MIDI_CHANNEL, Note4); //it might be needed if you use this with a synth but typically not needed to trigger drum samples and it would slow down
       // delay(5); //can use it for debug but it will slow down responsiveness of the device
       
-      return; // to mininize triggering of adjacent pads
     }
+    return; // to mininize triggering of adjacent pads
   };
 
 
@@ -339,8 +339,8 @@ void loop() {
       // MIDI_noteOff(MIDI_CHANNEL, Note5); //it might be needed if you use this with a synth but typically not needed to trigger drum samples and it would slow down
       // delay(5); //can use it for debug but it will slow down responsiveness of the device
 
-      return; // to mininize triggering of adjacent pads
     }
+    return; // to mininize triggering of adjacent pads
   };
 
 
@@ -385,8 +385,8 @@ void loop() {
       // MIDI_noteOff(MIDI_CHANNEL, Note6); //it might be needed if you use this with a synth but typically not needed to trigger drum samples and it would slow down
       // delay(5); //can use it for debug but it will slow down responsiveness of the device
       
-      return; // to mininize triggering of adjacent pads
     }
+    return; // to mininize triggering of adjacent pads
   };
 
 
