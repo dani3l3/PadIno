@@ -5,6 +5,7 @@ a MIDI 6 Drum Pads Controller by Plank guitars and musical things by Shambien (D
 
 2025 01 04 - v1.0 - initial version.
 2025 01 06 - v1.1 - code/unused references cleanup, fixed USB-Rename
+2025 01 08 - v1.2 - performance improvements
 
 For more information and credits refer to ReadMe in the GitHub repository https://github.com/dani3l3/PadIno
 
@@ -15,15 +16,12 @@ For more information and credits refer to ReadMe in the GitHub repository https:
 #include "Libraries\GM_Percussions.h"
 
 #include <ResponsiveAnalogRead.h>
-
 #include <MIDIUSB.h>
-
 
 // Rename the device
 USBRename PadIno = USBRename("Pad-ino", "Plank", "1.1");
 
-
-
+// DEBUG Directives, leave them commented out for production use - only enable them for debugging and setting the right thresholds, etc
 // #define DEBUG     1   // Will print DEBUG information
 // #define VELDEBUG     1   // Will print DEBUG information just for velocity info (if knock > threshold)
 // #define MIDIDEBUG     1   // Will print DEBUG information for MIDI messages to be sent
@@ -36,7 +34,6 @@ USBRename PadIno = USBRename("Pad-ino", "Plank", "1.1");
 static void MIDI_setup();
 static void MIDI_noteOn(int ch, int note, int velocity);
 static void MIDI_noteOff(int ch, int note);
-
 
 // Channel 10 is where drums are usually located
 // the MIDI_noteOn function takes care of channel-1 since in code it's zero based so this is the human-readable channel
@@ -65,7 +62,7 @@ const int Note6 = BASS_DRUM_1;
 
 
 // for ResponsiveAnalogRead resolution and mapping velocities
-const float snapMultiplier = 0.01; // (0.0 - 1.0) - Increase for faster, but less smooth reading
+const float snapMultiplier = 0.10; // (0.0 - 1.0) - Increase for faster, but less smooth reading
 const int potMin = 10;
 const int potMax = 256; // TODO might need tweaking based on how sensitive the hardware pads and piezo are (MAX: 1023)
 
@@ -133,26 +130,29 @@ void loop() {
     Serial.println("");
   #endif
 
-  if (checkForKnock(analog0.getRawValue())) {
-    #ifdef MIDIDEBUG
-      Serial.print("Channel");
-      Serial.print("\t");
-      Serial.print(MIDI_CHANNEL);
-      Serial.print("\t");
-      Serial.print(" ;");
-      Serial.print("Note");
-      Serial.print("\t");
-      Serial.print(Note1);
-      Serial.print("\t");
-      Serial.print(" ;");
-      Serial.print("\t");
-      Serial.println("Velocity");
-      Serial.print("\t");
-      Serial.println(map(analog0.getRawValue(), potMin, potMax, 0, 127));
-    #endif
+  if(analog0.hasChanged()) {
+    int a0value = analog0.getRawValue();
+    if (checkForKnock(a0value)) {
+      #ifdef MIDIDEBUG
+        Serial.print("Channel");
+        Serial.print("\t");
+        Serial.print(MIDI_CHANNEL);
+        Serial.print("\t");
+        Serial.print(" ;");
+        Serial.print("Note");
+        Serial.print("\t");
+        Serial.print(Note1);
+        Serial.print("\t");
+        Serial.print(" ;");
+        Serial.print("\t");
+        Serial.println("Velocity");
+        Serial.print("\t");
+        Serial.println(map(a0value, potMin, potMax, 0, 127));
+      #endif
 
-    MIDI_noteOn(MIDI_CHANNEL, Note1, map(analog0.getRawValue(), potMin, potMax, 0, 127));
-    delay(5);
+      MIDI_noteOn(MIDI_CHANNEL, Note1, map(a0value, potMin, potMax, 0, 127));
+      // delay(5); //can use it for debug but it will slow down responsiveness of the device
+    }
   };
 
 
@@ -172,26 +172,29 @@ void loop() {
     Serial.println("");
   #endif
 
-  if (checkForKnock(analog1.getRawValue())) {
-    #ifdef MIDIDEBUG
-      Serial.print("Channel");
-      Serial.print("\t");
-      Serial.print(MIDI_CHANNEL);
-      Serial.print("\t");
-      Serial.print(" ;");
-      Serial.print("Note");
-      Serial.print("\t");
-      Serial.print(Note2);
-      Serial.print("\t");
-      Serial.print(" ;");
-      Serial.print("\t");
-      Serial.println("Velocity");
-      Serial.print("\t");
-      Serial.println(map(analog1.getRawValue(), potMin, potMax, 0, 127));
-    #endif
+  if(analog1.hasChanged()) {
+    int a1value = analog1.getRawValue();
+    if (checkForKnock(a1value)) {
+      #ifdef MIDIDEBUG
+        Serial.print("Channel");
+        Serial.print("\t");
+        Serial.print(MIDI_CHANNEL);
+        Serial.print("\t");
+        Serial.print(" ;");
+        Serial.print("Note");
+        Serial.print("\t");
+        Serial.print(Note2);
+        Serial.print("\t");
+        Serial.print(" ;");
+        Serial.print("\t");
+        Serial.println("Velocity");
+        Serial.print("\t");
+        Serial.println(map(a1value, potMin, potMax, 0, 127));
+      #endif
 
-    MIDI_noteOn(MIDI_CHANNEL, Note2, map(analog1.getRawValue(), potMin, potMax, 0, 127));
-    delay(5);
+      MIDI_noteOn(MIDI_CHANNEL, Note2, map(a1value, potMin, potMax, 0, 127));
+      // delay(5); //can use it for debug but it will slow down responsiveness of the device
+    }
   };
 
 
@@ -211,26 +214,29 @@ void loop() {
     Serial.println("");
   #endif
 
-  if (checkForKnock(analog2.getRawValue())) {
-    #ifdef MIDIDEBUG
-      Serial.print("Channel");
-      Serial.print("\t");
-      Serial.print(MIDI_CHANNEL);
-      Serial.print("\t");
-      Serial.print(" ;");
-      Serial.print("Note");
-      Serial.print("\t");
-      Serial.print(Note3);
-      Serial.print("\t");
-      Serial.print(" ;");
-      Serial.print("\t");
-      Serial.println("Velocity");
-      Serial.print("\t");
-      Serial.println(map(analog2.getRawValue(), potMin, potMax, 0, 127));
-    #endif
+  if(analog2.hasChanged()) {
+    int a2value = analog2.getRawValue();
+    if (checkForKnock(a2value)) {
+      #ifdef MIDIDEBUG
+        Serial.print("Channel");
+        Serial.print("\t");
+        Serial.print(MIDI_CHANNEL);
+        Serial.print("\t");
+        Serial.print(" ;");
+        Serial.print("Note");
+        Serial.print("\t");
+        Serial.print(Note3);
+        Serial.print("\t");
+        Serial.print(" ;");
+        Serial.print("\t");
+        Serial.println("Velocity");
+        Serial.print("\t");
+        Serial.println(map(a2value, potMin, potMax, 0, 127));
+      #endif
 
-    MIDI_noteOn(MIDI_CHANNEL, Note3, map(analog2.getRawValue(), potMin, potMax, 0, 127));
-    delay(5);
+      MIDI_noteOn(MIDI_CHANNEL, Note3, map(a2value, potMin, potMax, 0, 127));
+      // delay(5); //can use it for debug but it will slow down responsiveness of the device
+    }
   };
 
 
@@ -250,26 +256,29 @@ void loop() {
     Serial.println("");
   #endif
 
-  if (checkForKnock(analog3.getRawValue())) {
-    #ifdef MIDIDEBUG
-      Serial.print("Channel");
-      Serial.print("\t");
-      Serial.print(MIDI_CHANNEL);
-      Serial.print("\t");
-      Serial.print(" ;");
-      Serial.print("Note");
-      Serial.print("\t");
-      Serial.print(Note4);
-      Serial.print("\t");
-      Serial.print(" ;");
-      Serial.print("\t");
-      Serial.println("Velocity");
-      Serial.print("\t");
-      Serial.println(map(analog3.getRawValue(), potMin, potMax, 0, 127));
-    #endif
+  if(analog3.hasChanged()) {
+    int a3value = analog3.getRawValue();
+    if (checkForKnock(a3value)) {
+      #ifdef MIDIDEBUG
+        Serial.print("Channel");
+        Serial.print("\t");
+        Serial.print(MIDI_CHANNEL);
+        Serial.print("\t");
+        Serial.print(" ;");
+        Serial.print("Note");
+        Serial.print("\t");
+        Serial.print(Note4);
+        Serial.print("\t");
+        Serial.print(" ;");
+        Serial.print("\t");
+        Serial.println("Velocity");
+        Serial.print("\t");
+        Serial.println(map(a3value, potMin, potMax, 0, 127));
+      #endif
 
-    MIDI_noteOn(MIDI_CHANNEL, Note4, map(analog3.getRawValue(), potMin, potMax, 0, 127));
-    delay(5);
+      MIDI_noteOn(MIDI_CHANNEL, Note4, map(a3value, potMin, potMax, 0, 127));
+      // delay(5); //can use it for debug but it will slow down responsiveness of the device
+    }
   };
 
 
@@ -289,26 +298,29 @@ void loop() {
     Serial.println("");
   #endif
 
-  if (checkForKnock(analog4.getRawValue())) {
-    #ifdef MIDIDEBUG
-      Serial.print("Channel");
-      Serial.print("\t");
-      Serial.print(MIDI_CHANNEL);
-      Serial.print("\t");
-      Serial.print(" ;");
-      Serial.print("Note");
-      Serial.print("\t");
-      Serial.print(Note5);
-      Serial.print("\t");
-      Serial.print(" ;");
-      Serial.print("\t");
-      Serial.println("Velocity");
-      Serial.print("\t");
-      Serial.println(map(analog4.getRawValue(), potMin, potMax, 0, 127));
-    #endif
+  if(analog4.hasChanged()) {
+    int a4value = analog4.getRawValue();
+    if (checkForKnock(a4value)) {
+      #ifdef MIDIDEBUG
+        Serial.print("Channel");
+        Serial.print("\t");
+        Serial.print(MIDI_CHANNEL);
+        Serial.print("\t");
+        Serial.print(" ;");
+        Serial.print("Note");
+        Serial.print("\t");
+        Serial.print(Note5);
+        Serial.print("\t");
+        Serial.print(" ;");
+        Serial.print("\t");
+        Serial.println("Velocity");
+        Serial.print("\t");
+        Serial.println(map(a4value, potMin, potMax, 0, 127));
+      #endif
 
-    MIDI_noteOn(MIDI_CHANNEL, Note5, map(analog4.getRawValue(), potMin, potMax, 0, 127));
-    delay(5);
+      MIDI_noteOn(MIDI_CHANNEL, Note5, map(a4value, potMin, potMax, 0, 127));
+      // delay(5); //can use it for debug but it will slow down responsiveness of the device
+    }
   };
 
 
@@ -328,26 +340,29 @@ void loop() {
     Serial.println("");
   #endif
 
-  if (checkForKnock(analog5.getRawValue())) {
-    #ifdef MIDIDEBUG
-      Serial.print("Channel");
-      Serial.print("\t");
-      Serial.print(MIDI_CHANNEL);
-      Serial.print("\t");
-      Serial.print(" ;");
-      Serial.print("Note");
-      Serial.print("\t");
-      Serial.print(Note6);
-      Serial.print("\t");
-      Serial.print(" ;");
-      Serial.print("\t");
-      Serial.println("Velocity");
-      Serial.print("\t");
-      Serial.println(map(analog5.getRawValue(), potMin, potMax, 0, 127));
-    #endif
+  if(analog5.hasChanged()) {
+    int a5value = analog5.getRawValue();
+    if (checkForKnock(a5value)) {
+      #ifdef MIDIDEBUG
+        Serial.print("Channel");
+        Serial.print("\t");
+        Serial.print(MIDI_CHANNEL);
+        Serial.print("\t");
+        Serial.print(" ;");
+        Serial.print("Note");
+        Serial.print("\t");
+        Serial.print(Note6);
+        Serial.print("\t");
+        Serial.print(" ;");
+        Serial.print("\t");
+        Serial.println("Velocity");
+        Serial.print("\t");
+        Serial.println(map(a5value, potMin, potMax, 0, 127));
+      #endif
 
-    MIDI_noteOn(MIDI_CHANNEL, Note6, map(analog5.getRawValue(), potMin, potMax, 0, 127));
-    delay(5);
+      MIDI_noteOn(MIDI_CHANNEL, Note6, map(a5value, potMin, potMax, 0, 127));
+      // delay(5); //can use it for debug but it will slow down responsiveness of the device
+    }
   };
 
 
