@@ -19,7 +19,7 @@ For more information and credits refer to ReadMe in the GitHub repository https:
 #include <MIDIUSB.h>
 
 // Rename the device
-USBRename PadIno = USBRename("Pad-ino", "Plank", "1.1");
+USBRename PadIno = USBRename("Pad-ino", "Plank", "1.2");
 
 // DEBUG Directives, leave them commented out for production use - only enable them for debugging and setting the right thresholds, etc
 // #define DEBUG     1   // Will print DEBUG information
@@ -62,9 +62,9 @@ const int Note6 = BASS_DRUM_1;
 
 
 // for ResponsiveAnalogRead resolution and mapping velocities
-const float snapMultiplier = 0.10; // (0.0 - 1.0) - Increase for faster, but less smooth reading
-const int potMin = 10;
-const int potMax = 256; // TODO might need tweaking based on how sensitive the hardware pads and piezo are (MAX: 1023)
+const float snapMultiplier = 0.5; // (0.0 - 1.0) - Increase for faster, but less smooth reading
+const int potMin = THRESHOLD;
+const int potMax = 511; // TODO might need tweaking based on how sensitive the hardware pads and piezo are (MAX: 1023)
 
 ResponsiveAnalogRead analog0(Pad1, true, snapMultiplier);
 ResponsiveAnalogRead analog1(Pad2, true, snapMultiplier);
