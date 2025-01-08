@@ -236,6 +236,7 @@ void loop() {
 
       MIDI_noteOn(MIDI_CHANNEL, Note3, map(a2value, potMin, potMax, 0, 127));
       // delay(5); //can use it for debug but it will slow down responsiveness of the device
+      return;
     }
   };
 
@@ -278,6 +279,7 @@ void loop() {
 
       MIDI_noteOn(MIDI_CHANNEL, Note4, map(a3value, potMin, potMax, 0, 127));
       // delay(5); //can use it for debug but it will slow down responsiveness of the device
+      return;
     }
   };
 
@@ -320,6 +322,7 @@ void loop() {
 
       MIDI_noteOn(MIDI_CHANNEL, Note5, map(a4value, potMin, potMax, 0, 127));
       // delay(5); //can use it for debug but it will slow down responsiveness of the device
+      return;
     }
   };
 
@@ -362,6 +365,7 @@ void loop() {
 
       MIDI_noteOn(MIDI_CHANNEL, Note6, map(a5value, potMin, potMax, 0, 127));
       // delay(5); //can use it for debug but it will slow down responsiveness of the device
+      return;
     }
   };
 
