@@ -20,7 +20,7 @@ For more information and credits refer to ReadMe in the GitHub repository https:
 #include <MIDIUSB.h>
 
 // Rename the device
-USBRename PadIno = USBRename("Pad-ino", "Plank", "1.2");
+USBRename PadIno = USBRename("Pad-ino", "Plank", "1.3");
 
 // DEBUG Directives, leave them commented out for production use - only enable them for debugging and setting the right thresholds, etc
 // #define DEBUG     1   // Will print DEBUG information
