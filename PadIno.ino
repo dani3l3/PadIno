@@ -6,6 +6,7 @@ a MIDI 6 Drum Pads Controller by Plank guitars and musical things by Shambien (D
 2025 01 04 - v1.0 - initial version.
 2025 01 06 - v1.1 - code/unused references cleanup, fixed USB-Rename
 2025 01 08 - v1.2 - performance improvements
+2025 01 09 - v1.3 - some refactoring and more perf improvements
 
 For more information and credits refer to ReadMe in the GitHub repository https://github.com/dani3l3/PadIno
 
@@ -28,7 +29,7 @@ USBRename PadIno = USBRename("Pad-ino", "Plank", "1.2");
 
 // Value at which the drum triggers / get considered 'hit hard enough' 
 // TODO adjust based on Pad's sensitivy (which depends on the physical build and piezo's but mostly the enclosure, to filter out adjacent piezo's picking up knocks from other ones)
-#define THRESHOLD 30   
+#define THRESHOLD 50   
 
 // overridden functions (defined later below)
 static void MIDI_setup();
@@ -62,9 +63,9 @@ const int Note6 = BASS_DRUM_1;
 
 
 // for ResponsiveAnalogRead resolution and mapping velocities
-const float snapMultiplier = 0.5; // (0.0 - 1.0) - Increase for faster, but less smooth reading
+const float snapMultiplier = 1.0; // (0.0 - 1.0) - Increase for faster, but less smooth reading
 const int potMin = THRESHOLD;
-const int potMax = 511; // TODO might need tweaking based on how sensitive the hardware pads and piezo are (MAX: 1023)
+const int potMax = 1023; // TODO might need tweaking based on how sensitive the hardware pads and piezo are (MAX: 1023)
 
 ResponsiveAnalogRead analog0(Pad1, true, snapMultiplier);
 ResponsiveAnalogRead analog1(Pad2, true, snapMultiplier);
@@ -132,6 +133,7 @@ void loop() {
 
   if(analog0.hasChanged()) {
     int a0value = analog0.getRawValue();
+    int a0velocity = calculateVelocity(a0value);
     if (checkForKnock(a0value)) {
       #ifdef MIDIDEBUG
         Serial.print("Channel");
@@ -147,10 +149,10 @@ void loop() {
         Serial.print("\t");
         Serial.println("Velocity");
         Serial.print("\t");
-        Serial.println(map(a0value, potMin, potMax, 0, 127));
+        Serial.println(a0velocity);
       #endif
 
-      MIDI_noteOn(MIDI_CHANNEL, Note1, map(a0value, potMin, potMax, 0, 127));
+      MIDI_noteOn(MIDI_CHANNEL, Note1, a0velocity);
           
       // MIDI_noteOff(MIDI_CHANNEL, Note1); //it might be needed if you use this with a synth but typically not needed to trigger drum samples and it would slow down
       // delay(5); //can use it for debug but it will slow down responsiveness of the device
@@ -178,6 +180,7 @@ void loop() {
 
   if(analog1.hasChanged()) {
     int a1value = analog1.getRawValue();
+    int a1velocity = calculateVelocity(a1value);
     if (checkForKnock(a1value)) {
       #ifdef MIDIDEBUG
         Serial.print("Channel");
@@ -193,10 +196,10 @@ void loop() {
         Serial.print("\t");
         Serial.println("Velocity");
         Serial.print("\t");
-        Serial.println(map(a1value, potMin, potMax, 0, 127));
+        Serial.println(a1velocity);
       #endif
 
-      MIDI_noteOn(MIDI_CHANNEL, Note2, map(a1value, potMin, potMax, 0, 127));
+      MIDI_noteOn(MIDI_CHANNEL, Note2, a1velocity);
 
       // MIDI_noteOff(MIDI_CHANNEL, Note2); //it might be needed if you use this with a synth but typically not needed to trigger drum samples and it would slow down
       // delay(5); //can use it for debug but it will slow down responsiveness of the device
@@ -224,6 +227,7 @@ void loop() {
 
   if(analog2.hasChanged()) {
     int a2value = analog2.getRawValue();
+    int a2velocity = calculateVelocity(a2value);
     if (checkForKnock(a2value)) {
       #ifdef MIDIDEBUG
         Serial.print("Channel");
@@ -239,10 +243,10 @@ void loop() {
         Serial.print("\t");
         Serial.println("Velocity");
         Serial.print("\t");
-        Serial.println(map(a2value, potMin, potMax, 0, 127));
+        Serial.println(a2velocity);
       #endif
 
-      MIDI_noteOn(MIDI_CHANNEL, Note3, map(a2value, potMin, potMax, 0, 127));
+      MIDI_noteOn(MIDI_CHANNEL, Note3, a2velocity);
       
       // MIDI_noteOff(MIDI_CHANNEL, Note3); //it might be needed if you use this with a synth but typically not needed to trigger drum samples and it would slow down
       // delay(5); //can use it for debug but it will slow down responsiveness of the device
@@ -270,6 +274,7 @@ void loop() {
 
   if(analog3.hasChanged()) {
     int a3value = analog3.getRawValue();
+    int a3velocity = calculateVelocity(a3value);
     if (checkForKnock(a3value)) {
       #ifdef MIDIDEBUG
         Serial.print("Channel");
@@ -285,10 +290,10 @@ void loop() {
         Serial.print("\t");
         Serial.println("Velocity");
         Serial.print("\t");
-        Serial.println(map(a3value, potMin, potMax, 0, 127));
+        Serial.println(a3velocity);
       #endif
 
-      MIDI_noteOn(MIDI_CHANNEL, Note4, map(a3value, potMin, potMax, 0, 127));
+      MIDI_noteOn(MIDI_CHANNEL, Note4, a3velocity);
       
       // MIDI_noteOff(MIDI_CHANNEL, Note4); //it might be needed if you use this with a synth but typically not needed to trigger drum samples and it would slow down
       // delay(5); //can use it for debug but it will slow down responsiveness of the device
@@ -316,6 +321,7 @@ void loop() {
 
   if(analog4.hasChanged()) {
     int a4value = analog4.getRawValue();
+    int a4velocity = calculateVelocity(a4value);
     if (checkForKnock(a4value)) {
       #ifdef MIDIDEBUG
         Serial.print("Channel");
@@ -331,10 +337,10 @@ void loop() {
         Serial.print("\t");
         Serial.println("Velocity");
         Serial.print("\t");
-        Serial.println(map(a4value, potMin, potMax, 0, 127));
+        Serial.println(a4velocity);
       #endif
 
-      MIDI_noteOn(MIDI_CHANNEL, Note5, map(a4value, potMin, potMax, 0, 127));
+      MIDI_noteOn(MIDI_CHANNEL, Note5, a4velocity);
 
       // MIDI_noteOff(MIDI_CHANNEL, Note5); //it might be needed if you use this with a synth but typically not needed to trigger drum samples and it would slow down
       // delay(5); //can use it for debug but it will slow down responsiveness of the device
@@ -362,6 +368,7 @@ void loop() {
 
   if(analog5.hasChanged()) {
     int a5value = analog5.getRawValue();
+    int a5velocity = calculateVelocity(a5value);
     if (checkForKnock(a5value)) {
       #ifdef MIDIDEBUG
         Serial.print("Channel");
@@ -377,10 +384,10 @@ void loop() {
         Serial.print("\t");
         Serial.println("Velocity");
         Serial.print("\t");
-        Serial.println(map(a5value, potMin, potMax, 0, 127));
+        Serial.println(a5velocity);
       #endif
 
-      MIDI_noteOn(MIDI_CHANNEL, Note6, map(a5value, potMin, potMax, 0, 127));
+      MIDI_noteOn(MIDI_CHANNEL, Note6, a5velocity);
       
       // MIDI_noteOff(MIDI_CHANNEL, Note6); //it might be needed if you use this with a synth but typically not needed to trigger drum samples and it would slow down
       // delay(5); //can use it for debug but it will slow down responsiveness of the device
@@ -416,7 +423,10 @@ bool checkForKnock(int value) {
 
 
 
-
+int calculateVelocity(int inputvalue) {
+  // velocity in MIDI ranges from 0 to 127 BUT we won't send anything lower than 50 because it's a drum pad and we are not caressing it.
+  return map(inputvalue, potMin, potMax, 50, 127);
+}
 
 
 
