@@ -27,9 +27,6 @@ USBRename PadIno = USBRename("Pad-ino", "Plank", "1.3");
 // #define VELDEBUG     1   // Will print DEBUG information just for velocity info (if knock > threshold)
 // #define MIDIDEBUG     1   // Will print DEBUG information for MIDI messages to be sent
 
-// Value at which the drum triggers / get considered 'hit hard enough' 
-// TODO adjust based on Pad's sensitivy (which depends on the physical build and piezo's but mostly the enclosure, to filter out adjacent piezo's picking up knocks from other ones)
-#define THRESHOLD 50   
 
 // overridden functions (defined later below)
 static void MIDI_setup();
@@ -52,7 +49,6 @@ const int Pad4 = A3;
 const int Pad5 = A6; // labelled '4' on Arduino Pro Micro
 const int Pad6 = A8; // labelled '8' on Arduino Pro Micro
 
-
 // Notes to be sent by each pad (uses GM library definitions)
 const int Note1 = CLOSED_HI_HAT;
 const int Note2 = HI_FLOOR_TOM;
@@ -61,10 +57,16 @@ const int Note4 = LO_FLOOR_TOM;
 const int Note5 = ELECTRIC_SNARE;
 const int Note6 = BASS_DRUM_1;
 
+// Value at which the drum triggers / get considered 'hit hard enough' 
+// TODO adjust based on Pad's sensitivy (which depends on the physical build and piezo's but mostly the enclosure, to filter out adjacent piezo's picking up knocks from other ones)
+const int threshold = 50;
+
+// velocity in MIDI ranges from 0 to 127 BUT we won't send anything lower than 50 because it's a drum pad and we are not caressing it. You might tweak it if you so desire.
+const int minVelocity = 50;
 
 // for ResponsiveAnalogRead resolution and mapping velocities
 const float snapMultiplier = 1.0; // (0.0 - 1.0) - Increase for faster, but less smooth reading
-const int potMin = THRESHOLD;
+const int potMin = threshold;
 const int potMax = 1023; // TODO might need tweaking based on how sensitive the hardware pads and piezo are (MAX: 1023)
 
 ResponsiveAnalogRead analog0(Pad1, true, snapMultiplier);
@@ -106,7 +108,7 @@ void setup() {
 
 void loop() {
 
-  // update the ResponsiveAnalogRead object every loop
+  // update the ResponsiveAnalogRead objects at every loop's iteration
   analog0.update();
   analog1.update();
   analog2.update();
@@ -119,15 +121,10 @@ void loop() {
   
   // analog0
   #ifdef DEBUG
-    Serial.print(analog0.getRawValue());
-    Serial.print("\t");
     Serial.print("Analog 0: " + analog0.getRawValue());
-    
-    // if the responsive value has change, print out 'changed'
     if(analog0.hasChanged()) {
       Serial.print("\tchanged");
     }
-    
     Serial.println("");
   #endif
 
@@ -136,20 +133,7 @@ void loop() {
     int a0velocity = calculateVelocity(a0value);
     if (checkForKnock(a0value)) {
       #ifdef MIDIDEBUG
-        Serial.print("Channel");
-        Serial.print("\t");
-        Serial.print(MIDI_CHANNEL);
-        Serial.print("\t");
-        Serial.print(" ;");
-        Serial.print("Note");
-        Serial.print("\t");
-        Serial.print(Note1);
-        Serial.print("\t");
-        Serial.print(" ;");
-        Serial.print("\t");
-        Serial.println("Velocity");
-        Serial.print("\t");
-        Serial.println(a0velocity);
+        printMidiDebugInfo(Note1, a0velocity);
       #endif
 
       MIDI_noteOn(MIDI_CHANNEL, Note1, a0velocity);
@@ -166,15 +150,10 @@ void loop() {
 
   // analog1
   #ifdef DEBUG
-    Serial.print(analog1.getRawValue());
-    Serial.print("\t");
     Serial.print("Analog 1: " + analog1.getRawValue());
-    
-    // if the responsive value has change, print out 'changed'
     if(analog1.hasChanged()) {
       Serial.print("\tchanged");
     }
-    
     Serial.println("");
   #endif
 
@@ -183,20 +162,7 @@ void loop() {
     int a1velocity = calculateVelocity(a1value);
     if (checkForKnock(a1value)) {
       #ifdef MIDIDEBUG
-        Serial.print("Channel");
-        Serial.print("\t");
-        Serial.print(MIDI_CHANNEL);
-        Serial.print("\t");
-        Serial.print(" ;");
-        Serial.print("Note");
-        Serial.print("\t");
-        Serial.print(Note2);
-        Serial.print("\t");
-        Serial.print(" ;");
-        Serial.print("\t");
-        Serial.println("Velocity");
-        Serial.print("\t");
-        Serial.println(a1velocity);
+        printMidiDebugInfo(Note2, a1velocity);
       #endif
 
       MIDI_noteOn(MIDI_CHANNEL, Note2, a1velocity);
@@ -213,15 +179,10 @@ void loop() {
 
   // analog2
   #ifdef DEBUG
-    Serial.print(analog2.getRawValue());
-    Serial.print("\t");
     Serial.print("Analog 2: " + analog2.getRawValue());
-    
-    // if the responsive value has change, print out 'changed'
     if(analog2.hasChanged()) {
       Serial.print("\tchanged");
     }
-    
     Serial.println("");
   #endif
 
@@ -230,20 +191,7 @@ void loop() {
     int a2velocity = calculateVelocity(a2value);
     if (checkForKnock(a2value)) {
       #ifdef MIDIDEBUG
-        Serial.print("Channel");
-        Serial.print("\t");
-        Serial.print(MIDI_CHANNEL);
-        Serial.print("\t");
-        Serial.print(" ;");
-        Serial.print("Note");
-        Serial.print("\t");
-        Serial.print(Note3);
-        Serial.print("\t");
-        Serial.print(" ;");
-        Serial.print("\t");
-        Serial.println("Velocity");
-        Serial.print("\t");
-        Serial.println(a2velocity);
+        printMidiDebugInfo(Note3, a2velocity);
       #endif
 
       MIDI_noteOn(MIDI_CHANNEL, Note3, a2velocity);
@@ -260,15 +208,10 @@ void loop() {
 
   // analog3
   #ifdef DEBUG
-    Serial.print(analog3.getRawValue());
-    Serial.print("\t");
     Serial.print("Analog 3: " + analog3.getRawValue());
-    
-    // if the responsive value has change, print out 'changed'
     if(analog3.hasChanged()) {
       Serial.print("\tchanged");
     }
-    
     Serial.println("");
   #endif
 
@@ -277,20 +220,7 @@ void loop() {
     int a3velocity = calculateVelocity(a3value);
     if (checkForKnock(a3value)) {
       #ifdef MIDIDEBUG
-        Serial.print("Channel");
-        Serial.print("\t");
-        Serial.print(MIDI_CHANNEL);
-        Serial.print("\t");
-        Serial.print(" ;");
-        Serial.print("Note");
-        Serial.print("\t");
-        Serial.print(Note4);
-        Serial.print("\t");
-        Serial.print(" ;");
-        Serial.print("\t");
-        Serial.println("Velocity");
-        Serial.print("\t");
-        Serial.println(a3velocity);
+        printMidiDebugInfo(Note4, a3velocity);
       #endif
 
       MIDI_noteOn(MIDI_CHANNEL, Note4, a3velocity);
@@ -307,15 +237,10 @@ void loop() {
 
   // analog4
   #ifdef DEBUG
-    Serial.print(analog4.getRawValue());
-    Serial.print("\t");
     Serial.print("Analog 4: " + analog4.getRawValue());
-    
-    // if the responsive value has change, print out 'changed'
     if(analog4.hasChanged()) {
       Serial.print("\tchanged");
     }
-    
     Serial.println("");
   #endif
 
@@ -324,20 +249,7 @@ void loop() {
     int a4velocity = calculateVelocity(a4value);
     if (checkForKnock(a4value)) {
       #ifdef MIDIDEBUG
-        Serial.print("Channel");
-        Serial.print("\t");
-        Serial.print(MIDI_CHANNEL);
-        Serial.print("\t");
-        Serial.print(" ;");
-        Serial.print("Note");
-        Serial.print("\t");
-        Serial.print(Note5);
-        Serial.print("\t");
-        Serial.print(" ;");
-        Serial.print("\t");
-        Serial.println("Velocity");
-        Serial.print("\t");
-        Serial.println(a4velocity);
+        printMidiDebugInfo(Note5, a4velocity);
       #endif
 
       MIDI_noteOn(MIDI_CHANNEL, Note5, a4velocity);
@@ -354,15 +266,10 @@ void loop() {
 
   // analog5
   #ifdef DEBUG
-    Serial.print(analog5.getRawValue());
-    Serial.print("\t");
     Serial.print("Analog 5: " + analog5.getRawValue());
-    
-    // if the responsive value has change, print out 'changed'
     if(analog5.hasChanged()) {
       Serial.print("\tchanged");
     }
-
     Serial.println("");
   #endif
 
@@ -371,20 +278,7 @@ void loop() {
     int a5velocity = calculateVelocity(a5value);
     if (checkForKnock(a5value)) {
       #ifdef MIDIDEBUG
-        Serial.print("Channel");
-        Serial.print("\t");
-        Serial.print(MIDI_CHANNEL);
-        Serial.print("\t");
-        Serial.print(" ;");
-        Serial.print("Note");
-        Serial.print("\t");
-        Serial.print(Note6);
-        Serial.print("\t");
-        Serial.print(" ;");
-        Serial.print("\t");
-        Serial.println("Velocity");
-        Serial.print("\t");
-        Serial.println(a5velocity);
+        printMidiDebugInfo(Note6, a5velocity);
       #endif
 
       MIDI_noteOn(MIDI_CHANNEL, Note6, a5velocity);
@@ -403,9 +297,9 @@ void loop() {
 
 // this function checks to see if a detected knock is above min threshold
 bool checkForKnock(int value) {
-  if (value > THRESHOLD) {
+  if (value > threshold) {
     #ifdef VELDEBUG
-      Serial.print("Valid knock of value ");
+      Serial.print("Valid knock value ");
       Serial.println(value);
     #endif
 
@@ -424,9 +318,28 @@ bool checkForKnock(int value) {
 
 
 int calculateVelocity(int inputvalue) {
-  // velocity in MIDI ranges from 0 to 127 BUT we won't send anything lower than 50 because it's a drum pad and we are not caressing it.
-  return map(inputvalue, potMin, potMax, 50, 127);
+  return map(inputvalue, potMin, potMax, minVelocity, 127);
 }
+
+
+
+void printMidiDebugInfo(int note, int velocity) {
+  Serial.print("Channel");
+  Serial.print("\t");
+  Serial.print(MIDI_CHANNEL);
+  Serial.print("\t");
+  Serial.print(" ;");
+  Serial.print("Note");
+  Serial.print("\t");
+  Serial.print(note);
+  Serial.print("\t");
+  Serial.print(" ;");
+  Serial.print("\t");
+  Serial.println("Velocity");
+  Serial.print("\t");
+  Serial.println(velocity);
+}
+
 
 
 
