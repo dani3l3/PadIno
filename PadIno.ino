@@ -7,20 +7,21 @@ a MIDI 6 Drum Pads Controller by Plank guitars and musical things by Shambien (D
 2025 01 06 - v1.1 - code/unused references cleanup, fixed USB-Rename
 2025 01 08 - v1.2 - performance improvements
 2025 01 09 - v1.3 - some refactoring and more perf improvements
+2025 11 12 - v1.4 - updated some include paths to linux syntax
 
 For more information and credits refer to ReadMe in the GitHub repository https://github.com/dani3l3/PadIno
 
 
 */
 
-#include "Libraries\usb_rename.cpp"
-#include "Libraries\GM_Percussions.h"
+#include "Libraries//usb_rename.cpp"
+#include "Libraries//GM_Percussions.h"
 
 #include <ResponsiveAnalogRead.h>
 #include <MIDIUSB.h>
 
 // Rename the device
-USBRename PadIno = USBRename("Pad-ino", "Plank", "1.3");
+USBRename PadIno = USBRename("Pad-ino", "Plank", "1.4");
 
 // DEBUG Directives, leave them commented out for production use - only enable them for debugging and setting the right thresholds, etc
 // #define DEBUG     1   // Will print DEBUG information
