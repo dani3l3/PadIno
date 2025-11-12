@@ -8,6 +8,7 @@ by Plank guitars and musical things by Shambien (Daniele Muscetta) - https://www
 - 2025 01 06 - v1.1 - code/unused references cleanup, fixed USB-Rename
 - 2025 01 08 - v1.2 - performance improvements
 - 2025 01 09 - v1.3 - some refactoring and more perf improvements
+- 2025 11 12 - v1.4 - updated some include paths to linux syntax
 
 Works on Arduino Pro Micro / Leonardo - UNTESTED on any other board (but it should work on all those based on the Atmega32U4 chipset).
 
